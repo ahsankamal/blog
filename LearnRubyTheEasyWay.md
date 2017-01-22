@@ -23,6 +23,8 @@ There are no primitive data types in ruby. All the data are represented as objec
 ```
 2.3.1 :001 > 7.class
  => Fixnum 
+2.3.1 :001 > 123456789876543212345678987654321.class
+ => Bignum  
 2.3.1 :002 > 7.0.class
  => Float 
 2.3.1 :003 > true.class
@@ -85,7 +87,13 @@ Hi
  => 1.4 
 #Exponentiation
 2.3.1 :021 > 2**10
- => 1024 
+ => 1024
+#square root 
+2.3.1 :030 > 49**(1/2.0)
+ => 7.0  
+#cube root
+2.3.1 :030 > 27**(1/3.0)
+ => 3.0  
 #Modulus division
 2.3.1 :022 > 7%5
  => 2 
@@ -271,5 +279,264 @@ Binary right shift by n bits means dividing by 2^n
  => 16 
 ```
 Binary And(&), OR(|), XOR(^) operations are also supported by ruby.
+
+##String
+
+**String Concatenation**: '+' vs '<<'
+
+'+' operator returns a new string after concatenation, while '<<' concatenates string inplace.
+```
+2.3.1 :016 > x=3+4
+ => 7 
+2.3.1 :019 > "3 + 4 is " + x.to_s + "."
+ => "3 + 4 is 7."
+2.3.1 :093 > a='one'
+ => "one" 
+2.3.1 :094 > a.object_id
+ => 70326373333420 
+2.3.1 :095 > a=a+'two'
+ => "onetwo" 
+2.3.1 :096 > a.object_id
+ => 70326364940240 
+2.3.1 :097 > a<<'three'
+ => "onetwothree" 
+2.3.1 :098 > a.object_id
+ => 70326364940240 
+```
+
+**String interpolation** means evaluating any ruby code present in the double quoted string literal and substituting the code with its result.
+It is faster than string concatenation and more commonly used within ruby community.
+```
+2.3.1 :020 > "3 + 4 is #{3+4}."
+ => "3 + 4 is 7." 
+```
+
+**Single quoted vs double quoted** string literals.
+
+Double quoted strings are more flexible bcoz they supports string interpolation and many escape sequences.
+```
+2.3.1 :021 > '3+4 is #{3+4}'
+ => "3+4 is \#{3+4}"
+2.3.1 :040 > puts 'Learn\truby\nthe easy\tway.'
+Learn\truby\nthe easy\tway.
+ => nil 
+2.3.1 :041 > puts "Learn\truby\nthe easy\tway."
+Learn	ruby
+the easy	way.
+ => nil 
+ ```
+Use backslash character to escape the special characters from being interpreted by ruby inside double quotes.
+```
+2.3.1 :044 > puts "Learn \"ruby\" \\nthe easy\\tway."
+Learn "ruby" \nthe easy\tway.
+ => nil 
+2.3.1 :053 > puts "Learn Ruby \
+2.3.1 :054"> the \
+2.3.1 :055"> easy way."
+Learn Ruby the easy way.
+ => nil 
+```
+**String formatting**
+```
+2.3.1 :056 > puts "%d + %d is %s" %[3,4,'seven']
+3 + 4 is seven
+ => nil 
+2.3.1 :057 > puts "%f + %f is %.2f" % [1.1111,0.1111,1.1111+0.1111]
+1.111100 + 0.111100 is 1.22
+ => nil 
+ 
+2.3.1 :065 > a=3
+ => 3 
+2.3.1 :066 > b=4
+ => 4 
+2.3.1 :067 > puts "%{x} + %{y} is %{z}" % {x: a, y: b, z: a+b} 
+3 + 4 is 7
+ => nil 
+ 
+2.3.1 :068 > sprintf("%f + %f is %.2f",1.1111,0.1111,1.1111+0.1111)
+ => "1.111100 + 0.111100 is 1.22" 
+ 
+2.3.1 :069 > printf("%f + %f is %.2f",1.1111,0.1111,1.1111+0.1111)
+1.111100 + 0.111100 is 1.22 => nil 
+
+2.3.1 :085 > %w[one two three]
+ => ["one", "two", "three"] 
+2.3.1 :086 > %i[one two three]
+ => [:one, :two, :three]
+```
+**String methods**
+```
+2.3.1 :099 > str = String.new("LearnRubyTheEasyWay")
+ => "LearnRubyTheEasyWay" 
+ 
+#str[index], str[start,length], str[range] 
+2.3.1 :100 > str[0]
+ => "L" 
+#negative index means 1-based position from end of the string. 
+2.3.1 :101 > str[-1]
+ => "y" 
+ 
+#str[start,length] 
+2.3.1 :120 > str[1,5]
+ => "earnR"
+ 
+#range object can be used to print substring 
+2.3.1 :102 > str[0..7]
+ => "LearnRub" 
+2.3.1 :103 > str[0...7]
+ => "LearnRu"
+2.3.1 :107 > str[-5..1000]
+ => "syWay" 
+2.3.1 :111 > str[10000]
+ => nil 
+ 
+#str.slice(index), str.slice(start,length), str.slice(range])
+2.3.1 :121 > str.slice(1,5)
+ => "earnR" 
+2.3.1 :122 > str.slice(1..5)
+ => "earnR" 
+2.3.1 :123 > str.slice(1)
+ => "e" 
+
+2.3.1 :118 > str.length
+ => 19 
+2.3.1 :132 > str.size
+ => 19 
+2.3.1 :133 > str.bytesize
+ => 19  
+2.3.1 :119 > str.reverse
+ => "yaWysaEehTybuRnraeL" 
+2.3.1 :179 > "  ahsan  ".strip
+ => "ahsan"
+
+2.3.1 :188 > 'ahsan'.hash
+ => 3770592549771597771 
+2.3.1 :187 > 'ahsan'.hash == 'ahsan'.hash
+ => true 
+2.3.1 :189 > :ahsan.hash
+ => 3603 
+
+2.3.1 :206 > 'one '*7
+ => "one one one one one one one " 
+
+2.3.1 :211 > "The Algorist".downcase
+ => "the algorist" 
+2.3.1 :212 > "The Algorist".upcase!
+ => "THE ALGORIST"
+
+2.3.1 :109 > "one two three".split
+ => ["one", "two", "three"] 
+2.3.1 :110 > "one,two,three".split(',')
+ => ["one", "two", "three"] 
+2.3.1 :112 > ["one", "two", "three"].join(",")
+ => "one,two,three" 
+```
+Ruby method containing bang(exclamation mark) at the end will modify the object upon which it is called. 
+```
+2.3.1 :144 > s="one\n"
+ => "one\n" 
+2.3.1 :145 > s.chomp
+ => "one" 
+2.3.1 :146 > s
+ => "one\n" 
+2.3.1 :147 > s.chomp!
+ => "one" 
+2.3.1 :148 > s
+ => "one" 
+```
+Ruby method containing ? at the end will return either true or false.
+```
+2.3.1 :151 > "one two three".include?('two')
+ => true 
+2.3.1 :152 > "one two three".include?('four')
+ => false 
+2.3.1 :153 > "".empty?
+ => true 
+2.3.1 :203 > "one two one".start_with?("one")
+ => true 
+2.3.1 :204 > "one two one".end_with?("one")
+ => true  
+```
+**sub** method replace only first matched occurence, **gsub** replaces all matched occurences.
+```
+#string.gsub('match','replacement')
+2.3.1 :159 > s = "one two three one"
+ => "one two three one" 
+2.3.1 :160 > s.sub('one','1')
+ => "1 two three one" 
+ 
+2.3.1 :161 > s
+ => "one two three one" 
+2.3.1 :162 > s.gsub('one','1')
+ => "1 two three 1" 
+ 
+2.3.1 :163 > s
+ => "one two three one" 
+2.3.1 :164 > s['one']='1'
+ => "1" 
+2.3.1 :165 > s
+ => "1 two three one" 
+2.3.1 :166 > s['one']='1'
+ => "1" 
+2.3.1 :167 > s
+ => "1 two three 1" 
+2.3.1 :168 > s['one']='1'
+IndexError: string not matched
+	from (irb):168:in `[]='
+	from (irb):168
+	from /Users/ahsan.kamal/.rvm/rubies/ruby-2.3.1/bin/irb:11:in `<main>'
+ ```
+Use **index** method to find first occurence of matched substring.
+```
+2.3.1 :173 > s
+ => "1 two three 1" 
+2.3.1 :174 > s.index('three')
+ => 6 
+```
+Use **scan** method to find all matching substring.
+```
+#string.scan(regex)
+2.3.1 :177 > "1 one1 two22 3 thre3e f4our".scan(/\d+/)
+ => ["1", "1", "22", "3", "3", "4"] 
+``` 
+Strings are mutable but they can be made immutable by using **freeze** method.
+```
+2.3.1 :199 > s=''
+ => "" 
+2.3.1 :200 > s<<'one'
+ => "one" 
+2.3.1 :201 > s.freeze
+ => "one" 
+2.3.1 :202 > s<<'two'
+RuntimeError: can't modify frozen String
+	from (irb):202
+	from /Users/ahsan.kamal/.rvm/rubies/ruby-2.3.1/bin/irb:11:in `<main>'
+```
+**Iterating strings**
+```
+2.3.1 :208 > '1234567'.each_char {|c| puts c}
+1
+2
+3
+4
+5
+6
+7
+ => "1234567" 
+
+2.3.1 :209 > '1234567'.each_byte {|c| puts c}
+49
+50
+51
+52
+53
+54
+55
+ => "1234567" 
+
+2.3.1 :210 > '1234567'.each_line {|c| puts c}
+1234567
+ => "1234567" 
+``` 
 
 #To be continued...
